@@ -71,7 +71,7 @@ const DashboardPage: React.FC = () => {
   };
 
   const menuItems = [
-    { title: 'Katalog Produk', icon: bookOutline, color: 'bg-blue-500', route: '/catalog' },
+    { title: 'Katalog Sekolah', icon: bookOutline, color: 'bg-blue-500', route: '/catalog' },
     { title: 'Video Presentasi', icon: videocamOutline, color: 'bg-purple-500', route: '/videos' },
     { title: 'Data Calon Siswa', icon: personAddOutline, color: 'bg-green-500', route: '/students/add' },
     { title: 'Statistik', icon: statsChartOutline, color: 'bg-orange-500', route: '/stats' },
