@@ -174,6 +174,9 @@ const LoginPage: React.FC = () => {
                       </label>
                       <input 
                         type="email" 
+                        name="email"
+                        id="email"
+                        autoComplete="username"
                         required
                         className="w-full bg-transparent text-white font-medium outline-none placeholder-gray-600 text-base"
                         placeholder="contoh@lp3i.ac.id"
@@ -206,6 +209,9 @@ const LoginPage: React.FC = () => {
                       </label>
                       <input 
                         type={showPassword ? "text" : "password"}
+                        name="password"
+                        id="password"
+                        autoComplete="current-password"
                         required 
                         className="w-full bg-transparent text-white font-medium outline-none placeholder-gray-600 text-base"
                         placeholder="••••••••"
