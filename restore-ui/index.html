@@ -32,27 +32,34 @@
         .snapshot-item {
             transition: all 0.2s;
             border-left: 4px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 8px;
+            border-radius: 6px;
         }
         .snapshot-item:hover {
             background-color: #334155;
             border-left: 4px solid var(--accent);
             transform: translateX(5px);
         }
-        .status-badge {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
         .loader {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             z-index: 9999;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+        .shutdown-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .shutdown-btn:hover {
+            background: var(--danger);
+            color: white;
         }
     </style>
 </head>
@@ -61,68 +68,59 @@
     <!-- Loading Overlay -->
     <div id="loader" class="loader">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
-        <h4 class="mt-3 text-white">Memproses System Restore...</h4>
-        <p class="text-muted">Jangan tutup halaman ini.</p>
+        <h4 class="mt-3 text-white">Sedang Memproses...</h4>
+        <p class="text-muted small">Jangan tutup browser.</p>
     </div>
 
-    <div class="container py-5">
+    <div class="container py-4">
         <!-- Header -->
-        <div class="row mb-5 align-items-center">
-            <div class="col-md-8">
-                <h1 class="fw-bold"><i class="fa-solid fa-screwdriver-wrench text-warning me-3"></i>System Restore Manager</h1>
-                <p class="text-secondary mb-0">Emergency Recovery Tools untuk Proyek Aplikasi Presenter</p>
+        <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary pb-4">
+            <div>
+                <h2 class="fw-bold mb-0"><i class="fa-solid fa-server text-warning me-2"></i>System Restore Manager</h2>
+                <span class="badge bg-secondary mt-2">PORT: 9999</span>
+                <span class="badge bg-success mt-2">ONLINE</span>
             </div>
-            <div class="col-md-4 text-end">
-                <div class="badge bg-success p-2 px-3 rounded-pill"><i class="fa-solid fa-circle-check me-2"></i>ENGINE ONLINE</div>
-                <div class="text-secondary small mt-1">Port: 3001</div>
-            </div>
+            <button onclick="shutdownServer()" class="btn shutdown-btn fw-bold px-4 py-2">
+                <i class="fa-solid fa-power-off me-2"></i>MATIKAN ENGINE
+            </button>
         </div>
 
-        <div class="row">
+        <div class="row g-4">
             <!-- Left Panel: Create Snapshot -->
-            <div class="col-md-5 mb-4">
+            <div class="col-md-4">
                 <div class="card h-100">
                     <div class="card-header bg-transparent border-bottom border-secondary py-3">
-                        <h5 class="mb-0"><i class="fa-solid fa-camera me-2 text-info"></i>Buat Checkpoint Baru</h5>
+                        <h6 class="mb-0 text-uppercase fw-bold text-info"><i class="fa-solid fa-plus-circle me-2"></i>Buat Checkpoint</h6>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-info border-0 bg-opacity-10 bg-info text-info small">
-                            <i class="fa-solid fa-circle-info me-2"></i>
-                            Buat checkpoint sebelum melakukan perubahan besar pada kode. Ini akan menyimpan seluruh kondisi file saat ini.
-                        </div>
                         <div class="mb-3">
-                            <label class="form-label text-secondary small text-uppercase fw-bold">Pesan / Label</label>
-                            <input type="text" id="snapshotMsg" class="form-control bg-dark text-white border-secondary" placeholder="Contoh: Sebelum install plugin baru...">
+                            <label class="form-label text-muted small fw-bold">CATATAN / LABEL</label>
+                            <textarea id="snapshotMsg" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Contoh: Fix Navbar UI..."></textarea>
                         </div>
                         <button onclick="createSnapshot()" class="btn btn-primary w-100 py-2 fw-bold">
-                            <i class="fa-solid fa-save me-2"></i>SIMPAN KONDISI SEKARANG
+                            <i class="fa-solid fa-save me-2"></i>SIMPAN KONDISI
                         </button>
+                        <p class="text-secondary small mt-3 text-center mb-0">
+                            Akan menyimpan seluruh file proyek ke dalam git tag baru.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Panel: History & Restore -->
-            <div class="col-md-7">
+            <!-- Right Panel: History -->
+            <div class="col-md-8">
                 <div class="card h-100">
                     <div class="card-header bg-transparent border-bottom border-secondary py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fa-solid fa-history me-2 text-warning"></i>Riwayat Restore Point</h5>
-                        <button onclick="loadSnapshots()" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-sync"></i> Refresh</button>
+                        <h6 class="mb-0 text-uppercase fw-bold text-warning"><i class="fa-solid fa-clock-rotate-left me-2"></i>Riwayat Checkpoint</h6>
+                        <button onclick="loadSnapshots()" class="btn btn-sm btn-dark border-secondary"><i class="fa-solid fa-rotate me-1"></i> Refresh</button>
                     </div>
-                    <div class="card-body p-0">
-                        <div id="snapshotList" class="list-group list-group-flush">
-                            <!-- List will be injected here -->
-                            <div class="text-center py-5 text-muted">
-                                <div class="spinner-border spinner-border-sm mb-2" role="status"></div>
-                                <p>Memuat data...</p>
-                            </div>
+                    <div class="card-body p-3 overflow-auto" style="max-height: 500px;">
+                        <div id="snapshotList">
+                            <!-- Injected JS -->
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="text-center mt-5 text-secondary small">
-            &copy; 2026 LP3I Developer Team - Local Development Tools
         </div>
     </div>
 
@@ -132,42 +130,56 @@
 
         async function loadSnapshots() {
             const list = document.getElementById('snapshotList');
+            list.innerHTML = '<div class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm"></div> Loading...</div>';
+            
             try {
                 const res = await fetch(`${API_URL}/snapshots`);
                 const data = await res.json();
                 
                 if(data.data.length === 0) {
-                    list.innerHTML = '<div class="text-center py-5 text-muted">Belum ada Restore Point tersimpan.</div>';
+                    list.innerHTML = `
+                        <div class="text-center py-5 opacity-50">
+                            <i class="fa-solid fa-box-open fa-3x mb-3"></i>
+                            <p>Belum ada checkpoint tersimpan.</p>
+                        </div>`;
                     return;
                 }
 
                 let html = '';
                 data.data.forEach(snap => {
                     html += `
-                        <div class="list-group-item bg-transparent text-light border-secondary p-3 snapshot-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="d-flex align-items-center gap-2 mb-1">
-                                    <span class="badge bg-secondary mono text-light">${snap.id}</span>
-                                    <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>${new Date().toLocaleDateString()}</small>
+                        <div class="snapshot-item p-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="mt-1 text-warning"><i class="fa-solid fa-bookmark fa-lg"></i></div>
+                                <div>
+                                    <div class="fw-bold text-light">${snap.name}</div>
+                                    <div class="d-flex align-items-center gap-2 mt-1">
+                                        <span class="badge bg-secondary mono small">${snap.id}</span>
+                                        <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>${new Date().toLocaleDateString()}</small>
+                                    </div>
                                 </div>
-                                <div class="fw-bold">${snap.name}</div>
                             </div>
-                            <button onclick="restore('${snap.id}')" class="btn btn-sm btn-outline-danger px-3">
-                                <i class="fa-solid fa-rotate-left me-1"></i> RESTORE
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button onclick="restore('${snap.id}')" class="btn btn-sm btn-outline-warning" title="Kembalikan Kondisi">
+                                    <i class="fa-solid fa-rotate-left"></i> RESTORE
+                                </button>
+                                <button onclick="deleteSnapshot('${snap.id}')" class="btn btn-sm btn-outline-danger" title="Hapus Checkpoint">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
                 list.innerHTML = html;
             } catch (error) {
-                list.innerHTML = '<div class="text-center py-5 text-danger">Gagal terhubung ke Server Engine.</div>';
+                list.innerHTML = '<div class="alert alert-danger text-center">Gagal terhubung ke Engine Server.</div>';
             }
         }
 
         async function createSnapshot() {
             const msgInput = document.getElementById('snapshotMsg');
             const message = msgInput.value.trim();
-            if(!message) { alert("Wajib isi pesan label!"); return; }
+            if(!message) { alert("Wajib isi catatan!"); return; }
 
             showLoader(true);
             try {
@@ -180,20 +192,16 @@
                 if(data.success) {
                     msgInput.value = '';
                     loadSnapshots();
-                    alert("Berhasil! Checkpoint tersimpan.");
                 } else {
-                    alert("Error: " + data.error);
+                    alert("Gagal: " + data.error);
                 }
-            } catch(e) {
-                alert("Gagal koneksi server.");
-            } finally {
-                showLoader(false);
-            }
+            } catch(e) { alert("Error koneksi."); }
+            finally { showLoader(false); }
         }
 
         async function restore(tagId) {
-            if(!confirm("BAHAYA! PERINGATAN KERAS!\n\nAnda akan mengembalikan SELURUH file proyek ke titik: " + tagId + ".\n\nSemua perubahan yang belum disimpan setelah titik itu akan HILANG SELAMANYA.\n\nYakin ingin melanjutkan?")) return;
-
+            if(!confirm("⚠️ PERINGATAN KRITIS ⚠️\n\nAnda akan me-REPLACE total proyek ini ke titik: " + tagId + ".\nPerubahan setelah titik ini akan hilang permanen.\n\nLanjutkan?")) return;
+            
             showLoader(true);
             try {
                 const res = await fetch(`${API_URL}/restore`, {
@@ -203,14 +211,44 @@
                 });
                 const data = await res.json();
                 if(data.success) {
-                    alert("SUKSES! Sistem telah dikembalikan ke " + tagId + ".\nSilakan restart server development (npm run dev) jika diperlukan.");
+                    alert("✅ SUKSES! Sistem telah dikembalikan ke kondisi: " + tagId);
                 } else {
-                    alert("Gagal Restore: " + data.error);
+                    alert("❌ Gagal: " + data.error);
                 }
+            } catch(e) { alert("Error fatal saat restore."); }
+            finally { showLoader(false); }
+        }
+
+        async function deleteSnapshot(tagId) {
+            if(!confirm("Hapus checkpoint " + tagId + "?")) return;
+            
+            showLoader(true);
+            try {
+                const res = await fetch(`${API_URL}/snapshot/${tagId}`, { method: 'DELETE' });
+                const data = await res.json();
+                if(data.success) {
+                    loadSnapshots();
+                } else {
+                    alert("Gagal hapus: " + data.error);
+                }
+            } catch(e) { alert("Error koneksi."); }
+            finally { showLoader(false); }
+        }
+
+        async function shutdownServer() {
+            if(!confirm("Matikan System Restore Engine?\n\n(Anda harus menjalankannya lagi lewat CMD jika ingin menggunakannya kembali)")) return;
+            
+            try {
+                await fetch(`${API_URL}/shutdown`, { method: 'POST' });
+                document.body.innerHTML = `
+                    <div class="d-flex justify-content-center align-items-center vh-100 text-center flex-column">
+                        <h1 class="text-danger mb-3"><i class="fa-solid fa-power-off"></i></h1>
+                        <h3 class="text-light">Engine Offline</h3>
+                        <p class="text-muted">Server telah dimatikan secara manual.<br>Tutup tab ini.</p>
+                    </div>
+                `;
             } catch(e) {
-                alert("Fatal Error saat restore.");
-            } finally {
-                showLoader(false);
+                // Ignore error because server dies immediately
             }
         }
 
@@ -218,7 +256,7 @@
             document.getElementById('loader').style.display = show ? 'flex' : 'none';
         }
 
-        // Init load
+        // Init
         loadSnapshots();
     </script>
 </body>

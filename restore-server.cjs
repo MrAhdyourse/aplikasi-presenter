@@ -90,6 +90,26 @@ app.post('/api/restore', async (req, res) => {
   }
 });
 
+// 4. DELETE SNAPSHOT
+app.delete('/api/snapshot/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await runCommand(`git tag -d "${id}"`);
+    res.json({ success: true, message: `Checkpoint ${id} deleted.` });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// 5. SHUTDOWN SERVER
+app.post('/api/shutdown', (req, res) => {
+  res.json({ success: true, message: "Engine shutting down..." });
+  console.log("[SYSTEM] Shutdown signal received from UI. Exiting...");
+  setTimeout(() => {
+    process.exit(0);
+  }, 1000);
+});
+
 // Fallback UI ditangani oleh express.static secara otomatis
 // Hapus route '*' yang bermasalah
 
