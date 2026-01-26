@@ -3,7 +3,6 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { 
   IonMenu, 
   IonContent, 
-  IonList, 
   IonIcon, 
   IonMenuToggle,
   IonAvatar,
@@ -15,7 +14,8 @@ import {
   peopleOutline, 
   calendarOutline, 
   statsChartOutline, 
-  logOutOutline
+  logOutOutline,
+  settingsOutline
 } from 'ionicons/icons';
 import { auth } from '../config/firebase-config';
 import { signOut } from 'firebase/auth';
@@ -39,74 +39,73 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <IonMenu contentId="main-content" type="overlay" className="my-custom-menu">
-      <IonContent className="--background: #ffffff;">
-        <div className="flex flex-col h-full bg-white">
+    <IonMenu contentId="main-content" type="overlay">
+      <IonContent className="--background: transparent;">
+        {/* Glassmorphism Container */}
+        <div className="flex flex-col h-full bg-white/80 backdrop-blur-xl border-r border-white/20 shadow-2xl">
           
-          {/* 1. Header Area (Brand) */}
-          <div className="px-6 py-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-200">
-                P
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-800 tracking-tight">Presenter<span className="text-blue-600">App</span></h1>
-                <p className="text-xs text-gray-500 font-medium tracking-wide">INTERNAL SYSTEM</p>
-              </div>
-            </div>
-
-            {/* User Profile Card (Mini) */}
-            <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-3 border border-gray-100">
-               <IonAvatar className="w-10 h-10 border-2 border-white shadow-sm">
-                 <img src={`https://ui-avatars.com/api/?name=${user?.email || 'User'}&background=random`} alt="Avatar" />
-               </IonAvatar>
+          {/* 1. Profile Section (Atmospheric) */}
+          <div className="relative px-6 pt-10 pb-8 bg-gradient-to-b from-blue-50/50 to-transparent">
+            <div className="flex items-center gap-4">
+               <div className="relative">
+                 <IonAvatar className="w-14 h-14 border-4 border-white shadow-lg">
+                   <img src={`https://ui-avatars.com/api/?name=${user?.email || 'User'}&background=0D8ABC&color=fff`} alt="Avatar" />
+                 </IonAvatar>
+                 <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-white rounded-full"></div>
+               </div>
                <div className="overflow-hidden">
-                 <p className="text-sm font-bold text-gray-800 truncate">{user?.displayName || 'Presenter'}</p>
-                 <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                 <h2 className="text-lg font-bold text-slate-800 truncate leading-tight">{user?.displayName?.split(' ')[0] || 'Presenter'}</h2>
+                 <p className="text-xs text-slate-500 truncate font-medium">Marketing Team</p>
                </div>
             </div>
           </div>
 
-          {/* 2. Navigation Items (Google Style) */}
-          <div className="px-3 flex-1 overflow-y-auto">
-            <IonList lines="none" className="bg-transparent p-0">
-              <div className="pl-4 mb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Main Menu</div>
-              
-              {appPages.map((p, index) => {
-                const isActive = location.pathname === p.url;
-                return (
-                  <IonMenuToggle key={index} autoHide={false}>
-                    <div 
-                      onClick={() => history.push(p.url)}
-                      className={`
-                        relative overflow-hidden group flex items-center gap-4 px-4 py-3 mb-1 rounded-r-full cursor-pointer transition-all duration-300
-                        ${isActive 
-                          ? 'bg-blue-50 text-blue-700 font-semibold border-l-4 border-blue-600' 
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-4 border-transparent'
-                        }
-                      `}
-                    >
-                      <IonIcon icon={p.icon} className={`text-xl transition-colors ${isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}`} />
-                      <span className="text-sm">{p.title}</span>
-                      <IonRippleEffect />
-                    </div>
-                  </IonMenuToggle>
-                );
-              })}
-            </IonList>
+          {/* 2. Navigation Items (Pill Shape) */}
+          <div className="px-4 flex-1 overflow-y-auto space-y-1">
+            <div className="px-4 mb-2 mt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menu Utama</div>
+            
+            {appPages.map((p, index) => {
+              const isActive = location.pathname === p.url;
+              return (
+                <IonMenuToggle key={index} autoHide={false}>
+                  <div 
+                    onClick={() => history.push(p.url)}
+                    className={`
+                      relative overflow-hidden group flex items-center gap-4 px-4 py-3.5 rounded-2xl cursor-pointer transition-all duration-300
+                      ${isActive 
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 translate-x-1' 
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                      }
+                    `}
+                  >
+                    <IonIcon icon={p.icon} className={`text-xl ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                    <span className="text-sm font-semibold tracking-wide">{p.title}</span>
+                    <IonRippleEffect />
+                  </div>
+                </IonMenuToggle>
+              );
+            })}
+
+            <div className="px-4 mb-2 mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pengaturan</div>
+            
+            {/* Dummy Settings Item */}
+             <div className="relative overflow-hidden group flex items-center gap-4 px-4 py-3.5 rounded-2xl cursor-pointer text-slate-600 hover:bg-slate-100 transition-all">
+                <IonIcon icon={settingsOutline} className="text-xl text-slate-400" />
+                <span className="text-sm font-semibold">Pengaturan Akun</span>
+                <IonRippleEffect />
+             </div>
           </div>
 
           {/* 3. Footer Actions */}
-          <div className="p-4 border-t border-gray-100">
+          <div className="p-4 mb-4">
              <div 
                 onClick={handleLogout}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 cursor-pointer transition-colors relative overflow-hidden"
+                className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-red-50 text-red-600 font-bold text-sm hover:bg-red-100 active:scale-95 transition-all cursor-pointer shadow-sm"
              >
                 <IonIcon icon={logOutOutline} />
-                <span className="text-sm font-medium">Keluar Sesi</span>
-                <IonRippleEffect type="bounded" />
+                <span>Keluar Aplikasi</span>
              </div>
-             <p className="text-[10px] text-center text-gray-400 mt-4">v1.2.0 • LP3I Indramayu</p>
+             <p className="text-[10px] text-center text-slate-300 mt-4 font-mono">v2.0.1 • Alpha Build</p>
           </div>
 
         </div>
