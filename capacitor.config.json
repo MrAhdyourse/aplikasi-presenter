@@ -8,7 +8,7 @@
   "plugins": {
     "LiveUpdates": {
       "appId": "db608ddf",
-      "channel": "Production",
+      "channel": "production",
       "autoUpdateMethod": "background",
       "maxVersions": 2
     }

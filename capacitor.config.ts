@@ -9,8 +9,8 @@ const config: CapacitorConfig = {
   },
   plugins: {
     LiveUpdates: {
-      appId: 'db608ddf', // APP ID VALID DARI ADMIN MASTER
-      channel: 'Production',
+      appId: 'db608ddf',
+      channel: 'production', // FIX: Huruf kecil sesuai instruksi
       autoUpdateMethod: 'background',
       maxVersions: 2
     }
