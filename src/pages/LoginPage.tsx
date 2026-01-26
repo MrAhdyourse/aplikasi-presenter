@@ -57,7 +57,22 @@ const LoginPage: React.FC = () => {
       presentToast({ message: 'Login Berhasil!', duration: 1500, color: 'success', position: 'top' });
       router.push('/dashboard', 'forward', 'replace');
     } catch (error: any) {
-      presentToast({ message: 'Akses Ditolak: Cek Email/Password Anda.', duration: 3000, color: 'danger', position: 'top' });
+      console.error("DEBUG_LOGIN_ERROR:", error);
+      let errorMessage = 'Akses Ditolak: Cek Email/Password Anda.';
+      
+      // Memberikan informasi lebih detail jika ada masalah koneksi atau konfigurasi
+      if (error.code === 'auth/network-request-failed') {
+        errorMessage = 'Koneksi Gagal: Periksa internet atau server Firebase.';
+      } else if (error.code === 'auth/internal-error') {
+        errorMessage = 'Firebase Internal Error. Cek konfigurasi API.';
+      }
+
+      presentToast({ 
+        message: `${errorMessage} (${error.code})`, 
+        duration: 5000, 
+        color: 'danger', 
+        position: 'top' 
+      });
     } finally {
       setLoading(false);
     }

@@ -2,33 +2,24 @@ import React, { useEffect } from 'react';
 import { 
   IonContent, 
   IonPage, 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonButtons, 
-  IonButton, 
   IonIcon,
   IonGrid,
   IonRow,
   IonCol,
   IonCard,
   IonCardContent,
-  useIonRouter,
   useIonToast
 } from '@ionic/react';
 import { 
-  logOutOutline, 
   bookOutline, 
   videocamOutline, 
   personAddOutline,
   statsChartOutline 
 } from 'ionicons/icons';
 import { auth } from '../shared/config/firebase-config';
-import { signOut } from 'firebase/auth';
 import { client } from '../shared/config/appwrite-config'; // Import Appwrite Client
 
 const DashboardPage: React.FC = () => {
-  const router = useIonRouter();
   const [presentToast] = useIonToast();
   const user = auth.currentUser;
 
@@ -38,15 +29,6 @@ const DashboardPage: React.FC = () => {
       try {
         await client.ping();
         console.log("Appwrite Connection: STABLE (Singapore Node)");
-        // Opsional: Tampilkan toast jika ingin feedback visual
-        /*
-        presentToast({
-          message: 'Terhubung ke Server Appwrite (SGP)',
-          duration: 1500,
-          color: 'success',
-          position: 'bottom'
-        });
-        */
       } catch (error) {
         console.error("Appwrite Connection: FAILED", error);
         presentToast({
@@ -61,15 +43,6 @@ const DashboardPage: React.FC = () => {
     checkAppwriteConnection();
   }, [presentToast]);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push('/login', 'back', 'replace');
-    } catch (error) {
-      console.error("Logout Error", error);
-    }
-  };
-
   const menuItems = [
     { title: 'Katalog Sekolah Indramayu', icon: bookOutline, color: 'bg-blue-500', route: '/catalog' },
     { title: 'Video Presentasi', icon: videocamOutline, color: 'bg-purple-500', route: '/videos' },
@@ -79,17 +52,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader className="ion-no-border">
-        <IonToolbar className="px-4 py-2">
-          <IonTitle className="font-bold text-xl">LP3I Presenter</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={handleLogout} color="danger">
-              <IonIcon slot="icon-only" icon={logOutOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
+      {/* Header dihapus karena sudah ada di MainLayout */}
       <IonContent fullscreen className="ion-padding bg-light">
         <div className="max-w-6xl mx-auto mt-4">
           

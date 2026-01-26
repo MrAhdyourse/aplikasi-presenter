@@ -1,0 +1,22 @@
+[SESSION HANDOVER - DATE: 2026-01-26]
+
+1. STATUS TERAKHIR (CRITICAL):
+   - Engine Mobile: Downgraded ke Capacitor v7 (Stable) agar kompatibel dengan Ionic Appflow Fastlane.
+   - Plugin Update: Menggunakan resmi `@capacitor/live-updates` v0.4.0.
+   - Konfigurasi: `capacitor.config.ts` & `json` sudah sinkron (Channel: 'production').
+   - Validasi: `npm run build` & `npx tsc --noEmit` SUKSES (Zero Error).
+
+2. TUGAS PENDING USER (SEBELUM LANJUT):
+   - Wajib jalankan `push-update.bat` untuk mengirim fix Capacitor v7 ke GitHub.
+   - Verifikasi Build di Dashboard Ionic Appflow (Harusnya sudah Hijau/Sukses).
+
+3. RENCANA PENGEMBANGAN SELANJUTNYA:
+   - FOKUS UTAMA: Membuat fitur "Katalog Sekolah Indramayu".
+   - Status Saat Ini: Menu di Dashboard sudah diganti namanya, tapi link `/catalog` masih kosong/belum dibuat.
+   - Target UI: Tampilkan Daftar Jurusan/Program Studi dengan gambar dan detail interaktif.
+
+4. KONFIGURASI VITAL:
+   - Appflow ID: db608ddf
+   - Live Channel: production
+   - Auth: Firebase (Ready)
+   - DB: Appwrite (Ready - ID: 6976f04b00347474aea2)
