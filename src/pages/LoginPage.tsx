@@ -7,7 +7,7 @@ import {
   useIonToast,
   useIonRouter
 } from '@ionic/react';
-import { logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { logInOutline, personOutline, lockClosedOutline, eyeOutline, eyeOffOutline, checkmarkCircle } from 'ionicons/icons';
 import { getPlatformFace } from '../shared/platforms/platform-manager';
 
 // Firebase Integrasi
@@ -30,6 +30,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSuccessUI, setShowSuccessUI] = useState(false); // State baru untuk Feedback Mewah
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const [presentToast] = useIonToast();
@@ -54,8 +55,14 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      presentToast({ message: 'Login Berhasil!', duration: 1500, color: 'success', position: 'top' });
-      router.push('/dashboard', 'forward', 'replace');
+      setLoading(false);
+      setShowSuccessUI(true); // Aktifkan Feedback Mewah
+      
+      // Delay sejenak agar user bisa melihat feedback sukses yang premium
+      setTimeout(() => {
+        router.push('/dashboard', 'forward', 'replace');
+      }, 2000);
+
     } catch (error: any) {
       console.error("DEBUG_LOGIN_ERROR:", error);
       let errorMessage = 'Akses Ditolak: Cek Email/Password Anda.';
@@ -281,6 +288,39 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* --- LUXURY SUCCESS FEEDBACK OVERLAY --- */}
+        {showSuccessUI && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-500">
+            {/* Dark Blurred Backdrop */}
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-3xl"></div>
+            
+            {/* Success Card */}
+            <div className="relative bg-white/10 backdrop-blur-md border border-white/20 p-10 rounded-[40px] shadow-2xl flex flex-col items-center gap-6 max-w-sm w-full text-center scale-up-center animate-in zoom-in-95 duration-300">
+               
+               {/* Glowing Icon Container */}
+               <div className="relative">
+                  <div className="absolute inset-0 bg-green-500 rounded-full blur-2xl opacity-40 animate-pulse"></div>
+                  <IonIcon 
+                    icon={checkmarkCircle} 
+                    className="text-8xl text-green-400 relative z-10 drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]" 
+                  />
+               </div>
+
+               <div className="space-y-2">
+                  <h2 className="text-3xl font-black text-white tracking-tight">Login Sukses</h2>
+                  <p className="text-gray-300 text-sm font-medium opacity-80 leading-relaxed px-4">
+                    Selamat datang kembali!<br/>Mempersiapkan Dashboard Anda...
+                  </p>
+               </div>
+
+               {/* Micro Loader */}
+               <div className="w-full bg-white/10 h-1 rounded-full mt-4 overflow-hidden max-w-[120px]">
+                  <div className="bg-green-400 h-full w-full origin-left animate-[shimmer_1.5s_infinite]"></div>
+               </div>
+            </div>
+          </div>
+        )}
 
       </IonContent>
     </IonPage>

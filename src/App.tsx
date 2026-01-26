@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact, isPlatform } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -19,9 +19,10 @@ import '@ionic/react/css/display.css';
 
 // Layout & Pages
 import MainLayout from './shared/components/MainLayout';
-import Sidebar from './shared/components/Sidebar'; // Import Sidebar Global
+import Sidebar from './shared/components/Sidebar'; 
+import ProtectedRoute from './shared/components/ProtectedRoute'; // Import Satpam
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
+import DashboardPage from './pages/dashboard'; 
 import { AboutPage } from './pages/AboutPage';
 import { SchedulePage } from './pages/SchedulePage';
 import { ApplicantsPage } from './pages/ApplicantsPage';
@@ -60,53 +61,57 @@ const App: React.FC = () => {
       <Sidebar />
 
       <IonRouterOutlet>
-        
-        {/* 1. PUBLIC ROUTE: LOGIN */}
-        <Route exact path="/login">
-          <LoginPage />
-        </Route>
+        <Switch>
+          {/* 1. PUBLIC ROUTE: LOGIN (Gerbang Utama) */}
+          <Route exact path="/login">
+            <LoginPage />
+          </Route>
 
-        {/* 2. DASHBOARD (Stand Alone Header - Tanpa MainLayout Wrapper) */}
-        <Route exact path="/dashboard">
-          <DashboardPage />
-        </Route>
+          {/* 2. PROTECTED ROUTES (Hanya untuk yang sudah login) */}
+          <ProtectedRoute exact path="/dashboard">
+            <DashboardPage />
+          </ProtectedRoute>
 
-        {/* 3. SUB PAGES (Dengan MainLayout Wrapper) */}
-        <Route exact path="/about">
-          <MainLayout title="Tentang Aplikasi">
-             <AboutPage />
-          </MainLayout>
-        </Route>
+          <ProtectedRoute exact path="/about">
+            <MainLayout title="Tentang Aplikasi">
+               <AboutPage />
+            </MainLayout>
+          </ProtectedRoute>
 
-        <Route exact path="/schedule">
-           <MainLayout title="Jadwal Sosialisasi">
-             <SchedulePage />
-           </MainLayout>
-        </Route>
+          <ProtectedRoute exact path="/schedule">
+             <MainLayout title="Jadwal Sosialisasi">
+               <SchedulePage />
+             </MainLayout>
+          </ProtectedRoute>
 
-        <Route exact path="/applicants">
-           <MainLayout title="Data Aplikan">
-             <ApplicantsPage />
-           </MainLayout>
-        </Route>
+          <ProtectedRoute exact path="/applicants">
+             <MainLayout title="Data Aplikan">
+               <ApplicantsPage />
+             </MainLayout>
+          </ProtectedRoute>
 
-        <Route exact path="/okr">
-           <MainLayout title="Laporan OKR">
-             <OKRPage />
-           </MainLayout>
-        </Route>
+          <ProtectedRoute exact path="/okr">
+             <MainLayout title="Laporan OKR">
+               <OKRPage />
+             </MainLayout>
+          </ProtectedRoute>
 
-        <Route exact path="/catalog">
-           <MainLayout title="Katalog Sekolah">
-             <CatalogPage />
-           </MainLayout>
-        </Route>
+          <ProtectedRoute exact path="/catalog">
+             <MainLayout title="Katalog Sekolah">
+               <CatalogPage />
+             </MainLayout>
+          </ProtectedRoute>
 
-        {/* 4. DEFAULT REDIRECT */}
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
+          {/* 3. DEFAULT REDIRECT */}
+          <Route exact path="/">
+            <Redirect to="/dashboard" />
+          </Route>
 
+          {/* 4. FALLBACK (Jika rute tidak ditemukan, balik ke dashboard) */}
+          <Route path="*">
+            <Redirect to="/dashboard" />
+          </Route>
+        </Switch>
       </IonRouterOutlet>
     </IonReactRouter>
   </IonApp>
