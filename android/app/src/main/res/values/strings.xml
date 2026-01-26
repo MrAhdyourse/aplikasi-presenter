@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LP3I Presenter</string>
+    <string name="title_activity_main">LP3I Presenter</string>
+    <string name="package_name">com.lp3i.presenter</string>
+    <string name="custom_url_scheme">com.lp3i.presenter</string>
+</resources>
