@@ -9,7 +9,7 @@ import {
   IonIcon
 } from '@ionic/react';
 import { home } from 'ionicons/icons';
-import Sidebar from './Sidebar';
+
 import { useLocation } from 'react-router-dom';
 
 interface MainLayoutProps {
@@ -26,11 +26,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
 
   return (
     <>
-      {/* 1. Global Sidebar */}
-      <Sidebar />
+
 
       {/* 2. Main Page Content Wrapper */}
-      <IonPage id="main-content">
+      <IonPage>
         <IonHeader className="ion-no-border bg-white border-b border-gray-100 shadow-sm">
           <IonToolbar className="--background: white; --min-height: 70px;">
             <IonButtons slot="start" className="ml-2">

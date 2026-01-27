@@ -64,7 +64,7 @@ const App: React.FC = () => {
       */}
       <Sidebar />
 
-      <IonRouterOutlet>
+      <IonRouterOutlet id="main-content">
         <Switch>
           {/* 1. PUBLIC ROUTE: LOGIN (Gerbang Utama) */}
           <Route exact path="/login">
