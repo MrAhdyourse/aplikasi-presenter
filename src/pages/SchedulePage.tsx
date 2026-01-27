@@ -98,8 +98,12 @@ export const SchedulePage: React.FC = () => { // Added IonPage
 
     setLoading(true);
     try {
-      // FORMAT DATA: Konversi ke ISOString untuk atribut Datetime Appwrite
-      const isoDate = new Date(formData.date).toISOString();
+      // FORMAT DATA: Validasi tanggal dulu
+      const dateObj = new Date(formData.date);
+      if (isNaN(dateObj.getTime())) {
+         throw new Error('Format tanggal tidak valid (Invalid Date)');
+      }
+      const isoDate = dateObj.toISOString();
       
       const data = { 
         title: formData.schoolName.trim(), 

@@ -4,5 +4,9 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // Menjamin path asset relatif tetap terbaca saat refresh
+  base: './',
+  build: {
+    target: 'es2015',
+    outDir: 'dist',
+  }
 })
