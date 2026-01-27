@@ -8,6 +8,7 @@ import {
   IonAvatar,
   IonRippleEffect
 } from '@ionic/react';
+import { menuController } from '@ionic/core'; // FIX: Import Menu Controller
 import { 
   gridOutline, 
   schoolOutline, 
@@ -29,6 +30,12 @@ const Sidebar: React.FC = () => {
   const history = useHistory();
   const user = auth.currentUser;
 
+  // FIX 1: Jangan render Sidebar sama sekali jika di halaman Login
+  // Ini mencegah sidebar "bocor" atau gesture swipe aktif di login screen.
+  if (location.pathname === '/login') {
+    return null;
+  }
+
   const appPages = [
     { title: 'Dashboard', url: '/dashboard', icon: gridOutline },
     { title: 'Info KSK', url: '/info-ksk', icon: informationCircleOutline },
@@ -42,8 +49,16 @@ const Sidebar: React.FC = () => {
   ];
 
   const handleLogout = async () => {
+    // FIX 2: Tutup menu secara animasi sebelum logout agar transisi mulus
+    await menuController.close();
+    
     await signOut(auth);
-    history.replace('/login');
+    
+    // FIX 3: Gunakan replace dengan direction 'back' untuk animasi keluar yang natural
+    history.replace('/login', { direction: 'back' });
+    
+    // Opsional: Force reload jika state aplikasi perlu dibersihkan total (tapi replace biasanya cukup)
+    // window.location.reload(); 
   };
 
   return (

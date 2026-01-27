@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -11,7 +11,8 @@ import {
   IonIcon,
   IonToast,
   IonLoading,
-  IonButton
+  IonButton,
+  useIonViewDidEnter
 } from '@ionic/react';
 import { 
   schoolOutline, 
@@ -52,6 +53,7 @@ const HOLIDAYS_2026 = [
 export const SchedulePage: React.FC = () => {
   // NOTE: IonPage & IonContent removed to avoid nesting issues with MainLayout
   
+  const calendarRef = useRef<FullCalendar>(null); // REF untuk kontrol Kalender manual
   const [events, setEvents] = useState<SosialisasiEvent[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<SosialisasiEvent | null>(null);
@@ -65,10 +67,11 @@ export const SchedulePage: React.FC = () => {
   const [formData, setFormData] = useState({ schoolName: '', date: '', rooms: 1 });
 
   const fetchData = async () => {
-    setLoading(true);
+    // Jangan set loading true jika data sudah ada (biar ga kedip2 parah saat navigasi)
+    if (events.length === 0) setLoading(true);
+    
     setErrorState({ isError: false, message: '' });
     try {
-      // DEBUG: Log start fetching
       console.log('Fetching schedule data...');
       
       const response = await databases.listDocuments(
@@ -82,12 +85,16 @@ export const SchedulePage: React.FC = () => {
       setEvents(response.documents.map((doc: any) => ({
         $id: doc.$id, title: doc.title, start: doc.start, rooms: doc.rooms
       })));
+
+      // FIX BUG VISUAL: Paksa kalender render ulang setelah data masuk
+      setTimeout(() => {
+        if (calendarRef.current) {
+          calendarRef.current.getApi().updateSize();
+        }
+      }, 100);
+
     } catch (error: any) {
-      console.error("[FETCH ERROR DETAILS]", {
-        message: error.message,
-        code: error.code,
-        response: error.response
-      });
+      console.error("[FETCH ERROR DETAILS]", error);
       
       let debugMsg = error.message;
       if (error.message.includes('Network Error') || error.message.includes('Failed to fetch')) {
@@ -101,7 +108,16 @@ export const SchedulePage: React.FC = () => {
     }
   };
 
-  useEffect(() => { fetchData(); }, []);
+  // FIX LIFECYCLE: Gunakan useIonViewDidEnter alih-alih useEffect
+  // Ini memastikan data diload & kalender dirender ulang SETIAP KALI user masuk ke halaman ini
+  useIonViewDidEnter(() => {
+    fetchData();
+    
+    // SAFETY: Paksa resize lagi saat view masuk animasi selesai
+    setTimeout(() => {
+        calendarRef.current?.getApi().updateSize();
+    }, 300);
+  });
 
   const saveEvent = async () => {
     if (!formData.schoolName || !formData.date) {
@@ -111,7 +127,6 @@ export const SchedulePage: React.FC = () => {
 
     setLoading(true);
     try {
-      // FORMAT DATA: Validasi tanggal dulu
       const dateObj = new Date(formData.date);
       if (isNaN(dateObj.getTime())) {
          throw new Error('Format tanggal tidak valid (Invalid Date)');
@@ -144,24 +159,12 @@ export const SchedulePage: React.FC = () => {
       setShowModal(false);
       fetchData();
     } catch (error: any) {
-      console.error("[SAVE ERROR DETAILS]", {
-        message: error.message,
-        code: error.code,
-        type: error.type,
-        response: error.response
-      });
-      
+      console.error("[SAVE ERROR DETAILS]", error);
       let friendlyMessage = error.message || 'Cek atribut database';
-      
       if (friendlyMessage.includes('Failed to fetch') || friendlyMessage.includes('Network Error')) {
         friendlyMessage = '⚠️ KONEKSI BLOKIR: Daftarkan Platform Android/Web di Appwrite Console.';
       }
-
-      setShowToast({
-        show: true, 
-        message: friendlyMessage, 
-        color: 'danger' 
-      });
+      setShowToast({ show: true, message: friendlyMessage, color: 'danger' });
     } finally {
       setLoading(false);
     }
@@ -231,6 +234,7 @@ export const SchedulePage: React.FC = () => {
                 <div className="bg-white p-4 md:p-10 rounded-3xl md:rounded-[3.5rem] shadow-2xl shadow-slate-200/50 border border-white overflow-hidden transition-all hover:shadow-blue-100/40">
                    <div className="calendar-modern-wrapper">
                       <FullCalendar
+                        ref={calendarRef}
                         plugins={[dayGridPlugin, interactionPlugin, listPlugin]}
                         initialView="dayGridMonth"
                         locale={idLocale}
@@ -262,9 +266,9 @@ export const SchedulePage: React.FC = () => {
                            const ev = events.find(e => e.$id === info.event.id);
                            if (ev) { 
                               setFormData({ schoolName: ev.title, date: ev.start, rooms: ev.rooms }); 
-                              setSelectedEvent(ev);
-                              setIsEditing(true);
-                              setShowModal(true);
+                              setSelectedEvent(ev); 
+                              setIsEditing(true); 
+                              setShowModal(true); 
                            }
                         }}
                         height="auto"
