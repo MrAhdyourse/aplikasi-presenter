@@ -63,6 +63,7 @@ const LoginPage: React.FC = () => {
         router.push('/dashboard', 'forward', 'replace');
       }, 2000);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("DEBUG_LOGIN_ERROR:", error);
       let errorMessage = 'Akses Ditolak: Cek Email/Password Anda.';

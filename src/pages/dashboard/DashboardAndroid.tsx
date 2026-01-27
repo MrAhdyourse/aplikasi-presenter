@@ -21,6 +21,7 @@ import {
   gridOutline
 } from 'ionicons/icons';
 import { auth } from '../../shared/config/firebase-config';
+import noiseBg from '../../assets/images/cdn/noise.svg';
 
 const DashboardAndroid: React.FC = () => {
   const user = auth.currentUser;
@@ -106,7 +107,7 @@ const DashboardAndroid: React.FC = () => {
            <div className="absolute -bottom-20 left-10 w-64 h-64 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '4s' }}></div>
 
            {/* Layer 4: Noise */}
-           <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+           <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url(${noiseBg})` }}></div>
         </div>
 
         <div className="relative z-10 px-5 pb-20 animate-fade-in-up">

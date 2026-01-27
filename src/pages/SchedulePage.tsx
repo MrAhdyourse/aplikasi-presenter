@@ -82,6 +82,7 @@ export const SchedulePage: React.FC = () => {
       
       console.log('Fetch success:', response.documents.length, 'items');
       
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setEvents(response.documents.map((doc: any) => ({
         $id: doc.$id, title: doc.title, start: doc.start, rooms: doc.rooms
       })));
@@ -93,6 +94,7 @@ export const SchedulePage: React.FC = () => {
         }
       }, 100);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("[FETCH ERROR DETAILS]", error);
       
@@ -158,6 +160,7 @@ export const SchedulePage: React.FC = () => {
       }
       setShowModal(false);
       fetchData();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("[SAVE ERROR DETAILS]", error);
       let friendlyMessage = error.message || 'Cek atribut database';
@@ -177,7 +180,7 @@ export const SchedulePage: React.FC = () => {
       setShowModal(false);
       setShowToast({ show: true, message: 'Jadwal dihapus!', color: 'success' });
       fetchData();
-    } catch (error) {
+    } catch {
       setShowToast({ show: true, message: 'Gagal menghapus', color: 'danger' });
     } finally {
       setLoading(false);

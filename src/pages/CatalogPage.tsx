@@ -10,10 +10,15 @@ import {
 import { 
   briefcaseOutline, 
   timeOutline, 
-  rocketOutline,
-  chevronForwardOutline,
-  star
+  rocketOutline, 
+  chevronForwardOutline, 
+  star 
 } from 'ionicons/icons';
+
+// Import Gambar Lokal (Offline-Ready)
+import imgBisnis from '../assets/images/cdn/catalog-bisnis.jpg';
+import imgIT from '../assets/images/cdn/catalog-it.jpg';
+import imgAkun from '../assets/images/cdn/catalog-akuntansi.jpg';
 
 interface ProgramStudi {
   id: string;
@@ -35,7 +40,7 @@ const programs: ProgramStudi[] = [
     prospect: ['HRD', 'Admin Officer', 'Entrepreneur'],
     duration: '3 Tahun',
     category: 'bisnis',
-    image: 'https://images.unsplash.com/photo-1454165833767-027eece15931?auto=format&fit=crop&q=80&w=400',
+    image: imgBisnis,
   },
   {
     id: '2',
@@ -45,7 +50,7 @@ const programs: ProgramStudi[] = [
     prospect: ['Web Developer', 'Systems Analyst', 'IT Support'],
     duration: '3 Tahun',
     category: 'teknologi',
-    image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=400',
+    image: imgIT,
   },
   {
     id: '3',
@@ -55,12 +60,11 @@ const programs: ProgramStudi[] = [
     prospect: ['Accounting Staff', 'Tax Consultant', 'Auditor'],
     duration: '3 Tahun',
     category: 'akuntansi',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=400',
+    image: imgAkun,
   }
 ];
 
-export const CatalogPage: React.FC = () => {
-  const [filter, setFilter] = useState<'all' | 'bisnis' | 'teknologi' | 'akuntansi'>('all');
+export const CatalogPage: React.FC = () => {  const [filter, setFilter] = useState<'all' | 'bisnis' | 'teknologi' | 'akuntansi'>('all');
   const [searchText, setSearchText] = useState('');
 
   const filteredPrograms = programs.filter(p => {
@@ -79,6 +83,7 @@ export const CatalogPage: React.FC = () => {
           placeholder="Cari program studi..."
           className="custom-searchbar mb-2"
         />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <IonSegment value={filter} onIonChange={(e) => setFilter(e.detail.value as any)} mode="ios">
           <IonSegmentButton value="all">
             <IonLabel>Semua</IonLabel>

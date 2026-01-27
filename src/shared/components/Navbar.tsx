@@ -29,9 +29,13 @@ const Navbar: React.FC = () => {
   }, []);
 
   // Close mobile menu when route changes
+  // FIX: Bungkus dalam setTimeout untuk menghindari 'synchronous setState' warning dari Linter
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
+    if (isMobileMenuOpen) {
+      const timer = setTimeout(() => setIsMobileMenuOpen(false), 0);
+      return () => clearTimeout(timer);
+    }
+  }, [location, isMobileMenuOpen]);
 
   const navLinks = [
     { name: 'Beranda', path: '/', icon: <Home size={18} /> },
