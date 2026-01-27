@@ -47,7 +47,8 @@ const DashboardAndroid: React.FC = () => {
   return (
     <IonPage id="dashboard-android">
       {/* HEADER ANDROID: Floating Material Capsule with Slide Down */}
-      <IonHeader className="ion-no-border shadow-none px-4 pt-4 animate-slide-down">
+      {/* FIX: Gunakan Dynamic Safe Area Padding agar tidak ketabrak Poni/Status Bar */}
+      <IonHeader className="ion-no-border shadow-none px-4 animate-slide-down" style={{ paddingTop: 'calc(var(--ion-safe-area-top) + 16px)' }}>
         <IonToolbar className="--background: transparent;">
           <div className="flex items-center justify-between bg-[#14141e]/40 backdrop-blur-[15px] p-1.5 rounded-full border border-white/10 shadow-xl group">
             
