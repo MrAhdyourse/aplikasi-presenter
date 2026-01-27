@@ -83,6 +83,8 @@ export const SchedulePage: React.FC = () => { // Added IonPage
         response: error.response
       });
       setShowToast({ show: true, message: 'Gagal sinkronisasi awan. Cek koneksi SGP.', color: 'danger' });
+      // DEBUG MODE: Tampilkan error di UI agar kelihatan di HP
+      alert(`DEBUG ERROR: ${error.message} \nCode: ${error.code} \nType: ${error.type}`);
     } finally {
       setLoading(false);
     }
