@@ -271,7 +271,7 @@ const LoginPage: React.FC = () => {
                     <IonSpinner name="dots" color="dark" />
                   ) : (
                     <>
-                      LOG IN <IonIcon icon={logInOutline} className="ml-2" />
+                      Masuk Sekarang <IonIcon icon={logInOutline} className="ml-2" />
                     </>
                   )}
                 </button>
