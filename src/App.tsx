@@ -28,6 +28,10 @@ import { SchedulePage } from './pages/SchedulePage';
 import { ApplicantsPage } from './pages/ApplicantsPage';
 import { OKRPage } from './pages/OKRPage';
 import { CatalogPage } from './pages/CatalogPage';
+import { InfoKSKPage } from './pages/InfoKSKPage';
+import { LaptopGratisPage } from './pages/LaptopGratisPage';
+import { InfoBiayaPage } from './pages/InfoBiayaPage';
+import { BrosurIklanPage } from './pages/BrosurIklanPage';
 
 setupIonicReact();
 
@@ -99,6 +103,30 @@ const App: React.FC = () => {
           <ProtectedRoute exact path="/catalog">
              <MainLayout title="Katalog Sekolah">
                <CatalogPage />
+             </MainLayout>
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/info-ksk">
+             <MainLayout title="Info KSK">
+               <InfoKSKPage />
+             </MainLayout>
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/laptop-gratis">
+             <MainLayout title="Laptop Gratis">
+               <LaptopGratisPage />
+             </MainLayout>
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/info-biaya">
+             <MainLayout title="Info Biaya">
+               <InfoBiayaPage />
+             </MainLayout>
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/brosur-iklan">
+             <MainLayout title="Brosur Iklan">
+               <BrosurIklanPage />
              </MainLayout>
           </ProtectedRoute>
 

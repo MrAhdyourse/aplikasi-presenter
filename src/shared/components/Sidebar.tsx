@@ -15,7 +15,11 @@ import {
   calendarOutline, 
   statsChartOutline, 
   logOutOutline,
-  settingsOutline
+  settingsOutline,
+  informationCircleOutline,
+  laptopOutline,
+  cashOutline,
+  megaphoneOutline
 } from 'ionicons/icons';
 import { auth } from '../config/firebase-config';
 import { signOut } from 'firebase/auth';
@@ -27,6 +31,10 @@ const Sidebar: React.FC = () => {
 
   const appPages = [
     { title: 'Dashboard', url: '/dashboard', icon: gridOutline },
+    { title: 'Info KSK', url: '/info-ksk', icon: informationCircleOutline },
+    { title: 'Laptop Gratis', url: '/laptop-gratis', icon: laptopOutline },
+    { title: 'Info Biaya', url: '/info-biaya', icon: cashOutline },
+    { title: 'Brosur Iklan', url: '/brosur-iklan', icon: megaphoneOutline },
     { title: 'Katalog Sekolah', url: '/catalog', icon: schoolOutline },
     { title: 'Jadwal Sosialisasi', url: '/schedule', icon: calendarOutline },
     { title: 'Data Aplikan', url: '/applicants', icon: peopleOutline },

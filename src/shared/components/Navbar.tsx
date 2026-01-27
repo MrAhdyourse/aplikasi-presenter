@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Info, Calendar, Users, FileText, Globe } from 'lucide-react';
+import { Menu, X, Home, Info, Calendar, Users, FileText, Globe, Laptop, BadgeDollarSign, Megaphone } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -36,6 +36,10 @@ const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Beranda', path: '/', icon: <Home size={18} /> },
     { name: 'Tentang Aplikasi', path: '/about', icon: <Info size={18} /> },
+    { name: 'Info KSK', path: '/info-ksk', icon: <Globe size={18} /> },
+    { name: 'Laptop Gratis', path: '/laptop-gratis', icon: <Laptop size={18} /> },
+    { name: 'Info Biaya', path: '/info-biaya', icon: <BadgeDollarSign size={18} /> },
+    { name: 'Brosur Iklan', path: '/brosur-iklan', icon: <Megaphone size={18} /> },
     { name: 'Jadwal Sosialisasi', path: '/schedule', icon: <Calendar size={18} /> },
     { name: 'Perolehan Aplikan', path: '/applicants', icon: <Users size={18} /> },
     { name: 'Laporan OKR', path: '/okr', icon: <FileText size={18} /> },
