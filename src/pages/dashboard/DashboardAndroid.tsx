@@ -91,10 +91,21 @@ const DashboardAndroid: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen className="--background: #0f172a;">
-        <div className="fixed inset-0 z-0 pointer-events-none">
+        {/* === BACKGROUND: MODERN TECH MESH (MOBILE VERSION) === */}
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+           {/* Layer 1: Base */}
            <div className="absolute inset-0 bg-slate-950"></div>
-           <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-blue-600/10 rounded-full blur-[80px]"></div>
-           <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px]"></div>
+           
+           {/* Layer 2: Grid Pattern */}
+           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+           {/* Layer 3: Animated Blobs (Smaller for Mobile) */}
+           <div className="absolute -top-10 -left-10 w-64 h-64 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+           <div className="absolute top-20 -right-10 w-64 h-64 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
+           <div className="absolute -bottom-20 left-10 w-64 h-64 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '4s' }}></div>
+
+           {/* Layer 4: Noise */}
+           <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
         </div>
 
         <div className="relative z-10 px-5 pb-20 animate-fade-in-up">

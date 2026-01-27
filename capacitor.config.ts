@@ -5,12 +5,14 @@ const config: CapacitorConfig = {
   appName: 'LP3I Presenter',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    cleartext: true,
+    allowNavigation: ['*']
   },
   plugins: {
     LiveUpdates: {
       appId: 'db608ddf',
-      channel: 'production', // FIX: Huruf kecil sesuai instruksi
+      channel: 'production',
       autoUpdateMethod: 'background',
       maxVersions: 2
     }

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSK LP3I - Career Center Visualization</title>
+    
+    <!-- React 18 Core -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Outfit (Modern) & Inter (Clean) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config untuk Warna Kustom -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        lp3i: {
+                            blue: '#0056b3',
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                            accent: '#0ea5e9' // Sky Blue
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: 1, boxShadow: '0 0 20px rgba(14, 165, 233, 0.5)' },
+                            '50%': { opacity: .5, boxShadow: '0 0 10px rgba(14, 165, 233, 0.2)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Device Mockup CSS (Laptop Shape) */
+        .mockup-laptop {
+            position: relative;
+            background: #1e293b;
+            border-radius: 12px 12px 0 0;
+            border: 1px solid #334155;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .mockup-base {
+            background: #cbd5e1;
+            height: 12px;
+            width: 120%;
+            margin-left: -10%;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-lp3i-dark text-slate-200 antialiased selection:bg-lp3i-accent selection:text-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // ==================================================================================
+        // [SOCKET - AREA EDIT] - SILAHKAN EDIT DATA DI BAWAH INI SESUAI KEBUTUHAN
+        // ==================================================================================
+        
+        const SOKET_DATA = {
+            // [SOCKET: NAVIGASI]
+            brandName: "KSK CENTER",
+            brandSub: "LP3I College Indramayu",
+            
+            // [SOCKET: HERO SECTION]
+            heroTitle: "Jembatan Karir Profesional",
+            heroTitleHighlight: "Masa Depan",
+            heroDesc: "Platform terintegrasi yang menghubungkan potensi mahasiswa LP3I dengan ratusan mitra perusahaan bonafit di Jawa Barat dan Nasional.",
+            heroButtonPrimary: "Jelajahi Lowongan",
+            heroButtonSecondary: "Untuk Mitra Perusahaan",
+
+            // [SOCKET: STATISTIK LIVE]
+            stats: [
+                { id: 1, label: "Mitra Perusahaan", value: 250, suffix: "+" },
+                { id: 2, label: "Alumni Terserap", value: 1500, suffix: "+" },
+                { id: 3, label: "Lowongan Aktif", value: 45, suffix: " New" },
+                { id: 4, label: "Kepuasan User", value: 98, suffix: "%" },
+            ],
+
+            // [SOCKET: FITUR UNGGULAN]
+            featuresTitle: "Ekosistem Karir Digital",
+            featuresDesc: "Visualisasi fitur yang tersedia di Web App KSK LP3I.",
+            features: [
+                { 
+                    id: 1, 
+                    title: "Real-time Job Matching", 
+                    desc: "Sistem cerdas yang mencocokkan skill alumni dengan kebutuhan industri.",
+                    icon: "Target"
+                },
+                { 
+                    id: 2, 
+                    title: "Digital CV Builder", 
+                    desc: "Generate CV standar ATS langsung dari data akademik mahasiswa.",
+                    icon: "FileText"
+                },
+                { 
+                    id: 3, 
+                    title: "MoU Tracking", 
+                    desc: "Pantau status kerjasama (MoU) antar perusahaan secara transparan.",
+                    icon: "Briefcase"
+                }
+            ],
+
+            // [SOCKET: MOCKUP CONTENT]
+            // Ini adalah teks yang muncul di dalam visualisasi Laptop
+            mockupHeader: "Portal Lowongan Kerja & Magang",
+            mockupSub: "Update Terakhir: 10 Menit yang lalu",
+            mockupJobs: [
+                { role: "Data Entry Staff", company: "Pertamina EP", loc: "Indramayu", type: "Full Time" },
+                { role: "Digital Marketing", company: "Batik Trusmi", loc: "Cirebon", type: "Contract" },
+                { role: "IT Support", company: "RS Mitra Plumbon", loc: "Cirebon", type: "Internship" },
+                { role: "Admin Finance", company: "Bank BRI", loc: "Nasional", type: "BUMN" }
+            ]
+        };
+
+        // ==================================================================================
+        // [AKHIR SOKET EDIT] - JANGAN UBAH KODE DI BAWAH KECUALI PAHAM REACT
+        // ==================================================================================
+
+
+        // --- COMPONENTS ---
+
+        // 1. Ikon Helper (Menggunakan Lucide)
+        const Icon = ({ name, size = 24, className }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, [name]);
+            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
+        };
+
+        // 2. Animated Counter Component
+        const Counter = ({ end, suffix, duration = 2000 }) => {
+            const [count, setCount] = useState(0);
+
+            useEffect(() => {
+                let startTime;
+                const animate = (currentTime) => {
+                    if (!startTime) startTime = currentTime;
+                    const progress = (currentTime - startTime) / duration;
+
+                    if (progress < 1) {
+                        setCount(Math.floor(end * progress));
+                        requestAnimationFrame(animate);
+                    } else {
+                        setCount(end);
+                    }
+                };
+                requestAnimationFrame(animate);
+            }, [end, duration]);
+
+            return <span>{count}{suffix}</span>;
+        };
+
+        // 3. Navbar Component
+        const Navbar = () => (
+            <nav className="fixed w-full z-50 top-0 transition-all duration-300 bg-lp3i-dark/80 backdrop-blur-md border-b border-white/10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-20">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/20">
+                                K
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="font-heading font-bold text-white text-lg leading-none tracking-wide">{SOKET_DATA.brandName}</span>
+                                <span className="text-xs text-slate-400 font-medium tracking-widest uppercase">{SOKET_DATA.brandSub}</span>
+                            </div>
+                        </div>
+                        <div className="hidden md:block">
+                            <div className="ml-10 flex items-baseline space-x-8">
+                                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:text-cyan-400 transition-colors">Beranda</a>
+                                <a href="#" className="text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Lowongan</a>
+                                <a href="#" className="text-slate-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Alumni</a>
+                                <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-full text-sm font-medium transition-all border border-white/10">
+                                    Login Portal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        );
+
+        // 4. Hero Section with Mockup Visualization
+        const Hero = () => {
+            return (
+                <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+                    {/* Background Blobs Animation */}
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+                        <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob"></div>
+                        <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob" style={{ animationDelay: "2s" }}></div>
+                        <div className="absolute -bottom-32 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob" style={{ animationDelay: "4s" }}></div>
+                        
+                        {/* Grid Pattern */}
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20"></div>
+                        <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(15, 23, 42, 0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.9) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        <div className="text-center max-w-3xl mx-auto mb-16">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-6 animate-float">
+                                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                                Visualisasi Sistem KSK v3.0
+                            </div>
+                            <h1 className="font-heading text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                                {SOKET_DATA.heroTitle} <br/>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                                    {SOKET_DATA.heroTitleHighlight}
+                                </span>
+                            </h1>
+                            <p className="text-lg text-slate-400 mb-10 leading-relaxed">
+                                {SOKET_DATA.heroDesc}
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button className="group bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
+                                    {SOKET_DATA.heroButtonPrimary}
+                                    <Icon name="arrow-right" size={20} className="group-hover:translate-x-1 transition-transform" />
+                                </button>
+                                <button className="glass-panel text-white px-8 py-4 rounded-xl font-bold hover:bg-white/10 transition-all">
+                                    {SOKET_DATA.heroButtonSecondary}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* VISUALIZATION MOCKUP (THE CORE REQUEST) */}
+                        <div className="relative mt-20 mx-auto max-w-5xl perspective-1000">
+                            
+                            {/* Laptop Body CSS */}
+                            <div className="mockup-laptop aspect-video p-2 md:p-4 bg-slate-800 transition-transform duration-700 hover:rotate-x-2 transform origin-bottom">
+                                {/* Webcam dot */}
+                                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-slate-600 rounded-full z-20"></div>
+                                
+                                {/* Screen Content (The Website Visualization) */}
+                                <div className="w-full h-full bg-white rounded-lg overflow-hidden relative flex flex-col">
+                                    
+                                    {/* Browser Bar */}
+                                    <div className="h-8 bg-slate-100 border-b border-slate-200 flex items-center px-4 gap-2">
+                                        <div className="flex gap-1.5">
+                                            <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                                            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                            <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                                        </div>
+                                        <div className="flex-1 mx-4 bg-white h-5 rounded-md border border-slate-200 text-[10px] flex items-center px-2 text-slate-400 font-mono">
+                                            https://ksk.lp3i-indramayu.ac.id/portal
+                                        </div>
+                                    </div>
+
+                                    {/* Web Content inside Laptop */}
+                                    <div className="flex-1 bg-slate-50 p-6 overflow-hidden relative">
+                                        {/* Mockup Header */}
+                                        <div className="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
+                                            <div>
+                                                <h3 className="text-xl font-bold text-slate-800">{SOKET_DATA.mockupHeader}</h3>
+                                                <p className="text-xs text-slate-500">{SOKET_DATA.mockupSub}</p>
+                                            </div>
+                                            <button className="bg-blue-600 text-white text-xs px-3 py-1.5 rounded">Post Lowongan</button>
+                                        </div>
+
+                                        {/* Mockup Job Cards Grid */}
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {SOKET_DATA.mockupJobs.map((job, idx) => (
+                                                <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:border-blue-300 transition-colors group cursor-pointer">
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <div className="w-8 h-8 rounded bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">
+                                                            {job.company.charAt(0)}
+                                                        </div>
+                                                        <span className="text-[10px] px-2 py-0.5 bg-green-50 text-green-700 rounded-full border border-green-100">{job.type}</span>
+                                                    </div>
+                                                    <h4 className="font-bold text-slate-800 text-sm group-hover:text-blue-600">{job.role}</h4>
+                                                    <p className="text-xs text-slate-500 mb-2">{job.company}</p>
+                                                    <div className="flex items-center text-[10px] text-slate-400 gap-1">
+                                                        <Icon name="map-pin" size={10} /> {job.loc}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Decorative Elements inside Screen */}
+                                        <div className="absolute right-6 top-20 w-48 h-32 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-100 p-3 hidden md:block">
+                                            <div className="text-xs font-bold text-slate-700 mb-2">Statistik Pelamar</div>
+                                            <div className="flex items-end gap-1 h-16">
+                                                <div className="w-1/5 bg-blue-300 rounded-t h-[40%]"></div>
+                                                <div className="w-1/5 bg-blue-400 rounded-t h-[70%]"></div>
+                                                <div className="w-1/5 bg-blue-500 rounded-t h-[50%]"></div>
+                                                <div className="w-1/5 bg-blue-600 rounded-t h-[90%]"></div>
+                                                <div className="w-1/5 bg-blue-700 rounded-t h-[60%]"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Laptop Base */}
+                            <div className="mockup-base w-[80%] mx-auto"></div>
+                            
+                            {/* Mobile Phone Floating */}
+                            <div className="absolute -bottom-10 -right-4 md:-right-12 w-24 md:w-48 bg-black rounded-[2rem] border-4 border-slate-700 p-1 shadow-2xl animate-float" style={{ animationDelay: '1s' }}>
+                                <div className="bg-white w-full h-full rounded-[1.7rem] overflow-hidden relative">
+                                    <div className="h-6 bg-slate-100 flex justify-center items-center">
+                                        <div className="w-16 h-4 bg-black rounded-b-xl"></div>
+                                    </div>
+                                    <div className="p-3">
+                                        <div className="w-full h-24 bg-blue-600 rounded-xl mb-3 flex items-center justify-center text-white text-center p-2">
+                                            <div className="text-[10px]">Halo, <br/><b>Ahdi Aghnii</b></div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <div className="h-8 bg-slate-100 rounded-lg"></div>
+                                            <div className="h-8 bg-slate-100 rounded-lg"></div>
+                                            <div className="h-8 bg-slate-100 rounded-lg"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // 5. Stats Section (Bento Grid Style)
+        const StatsSection = () => (
+            <section className="py-20 relative z-20">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {SOKET_DATA.stats.map((stat) => (
+                            <div key={stat.id} className="glass-card p-6 rounded-2xl text-center group hover:bg-white/5 transition-colors cursor-default">
+                                <div className="text-4xl md:text-5xl font-heading font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300 inline-block">
+                                    <Counter end={stat.value} suffix={stat.suffix} />
+                                </div>
+                                <div className="h-1 w-12 bg-blue-500 mx-auto mb-3 rounded-full"></div>
+                                <p className="text-sm text-slate-400 font-medium uppercase tracking-wider">{stat.label}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 6. Features Section (Elegant Cards)
+        const FeaturesSection = () => (
+            <section className="py-24 bg-lp3i-dark/50 relative">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-heading font-bold text-white mb-4">{SOKET_DATA.featuresTitle}</h2>
+                        <p className="text-slate-400 max-w-2xl mx-auto">{SOKET_DATA.featuresDesc}</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {SOKET_DATA.features.map((feature) => (
+                            <div key={feature.id} className="group relative p-8 rounded-3xl bg-slate-800/50 border border-white/5 hover:border-blue-500/30 transition-all hover:bg-slate-800 overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/20 transition-all"></div>
+                                
+                                <div className="w-14 h-14 bg-slate-900 rounded-2xl border border-white/10 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-blue-900/20">
+                                    <Icon name={feature.icon.toLowerCase()} size={28} />
+                                </div>
+                                
+                                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">{feature.title}</h3>
+                                <p className="text-slate-400 leading-relaxed text-sm">
+                                    {feature.desc}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        // 7. Footer (Simple Elegant)
+        const Footer = () => (
+            <footer className="border-t border-white/10 bg-slate-900 pt-16 pb-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+                        <div className="mb-4 md:mb-0">
+                             <span className="font-heading font-bold text-2xl text-white">KSK<span className="text-blue-500">.</span></span>
+                             <p className="text-slate-500 text-sm mt-1">Sistem Informasi Kerjasama & Penempatan</p>
+                        </div>
+                        <div className="flex gap-6">
+                            <a href="#" className="text-slate-400 hover:text-white transition-colors"><Icon name="instagram" size={20} /></a>
+                            <a href="#" className="text-slate-400 hover:text-white transition-colors"><Icon name="linkedin" size={20} /></a>
+                            <a href="#" className="text-slate-400 hover:text-white transition-colors"><Icon name="globe" size={20} /></a>
+                        </div>
+                    </div>
+                    <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-600">
+                        <p>&copy; 2025 LP3I College Indramayu. All rights reserved.</p>
+                        <p>Designed with passion by Ahdi Aghnii.</p>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        // --- MAIN APP COMPONENT ---
+        const App = () => {
+            return (
+                <div className="overflow-x-hidden">
+                    <Navbar />
+                    <Hero />
+                    <StatsSection />
+                    <FeaturesSection />
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

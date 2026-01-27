@@ -93,10 +93,24 @@ const DashboardDesktop: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen className="--background: #0f172a;">
-        <div className="fixed inset-0 z-0 pointer-events-none">
+        {/* === BACKGROUND: MODERN TECH MESH GRADIENT WITH NOISE === */}
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+           {/* Layer 1: Base Dark Color (Deep Slate) */}
            <div className="absolute inset-0 bg-slate-950"></div>
-           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/30 via-slate-950 to-transparent"></div>
-           <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen"></div>
+           
+           {/* Layer 2: Grid Pattern (Technical/Precision Look) */}
+           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+           {/* Layer 3: Animated Gradient Blobs (Glowing & Dynamic) */}
+           {/* Blob 1: Blue */}
+           <div className="absolute top-0 -left-4 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+           {/* Blob 2: Cyan (Delayed) */}
+           <div className="absolute top-0 -right-4 w-96 h-96 bg-cyan-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '2s' }}></div>
+           {/* Blob 3: Indigo (Bottom Center - Delayed) */}
+           <div className="absolute -bottom-32 left-1/2 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" style={{ animationDelay: '4s' }}></div>
+
+           {/* Layer 4: Noise Texture (Matte Finish - Anti Plastik) */}
+           <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
         </div>
 
         <div className="relative z-10 px-10 pb-24 max-w-7xl mx-auto">
