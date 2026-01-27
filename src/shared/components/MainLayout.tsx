@@ -30,7 +30,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
 
       {/* 2. Main Page Content Wrapper */}
       <IonPage>
-        <IonHeader className="ion-no-border bg-white border-b border-gray-100 shadow-sm">
+        {/* FIX: Tambahkan Safe Area Padding agar Header turun ke bawah status bar */}
+        <IonHeader 
+          className="ion-no-border bg-white border-b border-gray-100 shadow-sm"
+          style={{ paddingTop: 'var(--ion-safe-area-top)' }}
+        >
           <IonToolbar className="--background: white; --min-height: 70px;">
             <IonButtons slot="start" className="ml-2">
               <IonMenuButton color="primary" /> {/* Tombol Hamburger */}
