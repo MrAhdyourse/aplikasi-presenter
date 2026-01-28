@@ -282,7 +282,7 @@ const LoginPage: React.FC = () => {
               {/* Footer */}
               <div className="mt-8 text-center border-t border-white/5 pt-6">
                 <p className="text-gray-500 text-xs">
-                  Protected by LP3I Security System &copy; 2026
+                  dikembangkanolehMiaw
                 </p>
               </div>
 
