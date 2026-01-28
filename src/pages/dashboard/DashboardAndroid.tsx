@@ -48,8 +48,8 @@ const DashboardAndroid: React.FC = () => {
   return (
     <IonPage id="dashboard-android">
       {/* HEADER ANDROID: Floating Material Capsule with Slide Down */}
-      {/* FIX: Gunakan env() dengan fallback 40px + extra padding 30px agar benar-benar turun (70px min) */}
-      <IonHeader className="ion-no-border shadow-none px-4 animate-slide-down" style={{ paddingTop: 'calc(env(safe-area-inset-top, 40px) + 30px)' }}>
+      {/* FIX: Tambahkan padding lebih dalam lagi (+45px) untuk posisi 'Sweet Spot' */}
+      <IonHeader className="ion-no-border shadow-none px-4 animate-slide-down" style={{ paddingTop: 'calc(env(safe-area-inset-top, 40px) + 45px)' }}>
         <IonToolbar className="--background: transparent;">
           <div className="flex items-center justify-between bg-[#14141e]/40 backdrop-blur-[15px] p-1.5 rounded-full border border-white/10 shadow-xl group">
             

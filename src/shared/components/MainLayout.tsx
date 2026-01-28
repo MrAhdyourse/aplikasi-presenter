@@ -30,10 +30,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, title }) => {
 
       {/* 2. Main Page Content Wrapper */}
       <IonPage>
-        {/* FIX: Tambahkan Safe Area Padding + Extra Space (25px) agar Header turun ke bawah status bar */}
+        {/* FIX: Tambahkan padding lebih dalam lagi (+40px) agar benar-benar 'Pass' di Android APK */}
         <IonHeader 
           className="ion-no-border bg-white border-b border-gray-100 shadow-sm"
-          style={{ paddingTop: 'calc(env(safe-area-inset-top, 40px) + 25px)' }}
+          style={{ paddingTop: 'calc(env(safe-area-inset-top, 40px) + 40px)' }}
         >
           <IonToolbar className="--background: white; --min-height: 70px;">
             <IonButtons slot="start" className="ml-2">
