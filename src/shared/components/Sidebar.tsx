@@ -111,12 +111,22 @@ const Sidebar: React.FC = () => {
 
             <div className="px-4 mb-2 mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Pengaturan</div>
             
-            {/* Dummy Settings Item */}
-             <div className="relative overflow-hidden group flex items-center gap-4 px-4 py-3.5 rounded-2xl cursor-pointer text-slate-600 hover:bg-slate-100 transition-all">
-                <IonIcon icon={settingsOutline} className="text-xl text-slate-400" />
+            <IonMenuToggle autoHide={false}>
+              <div 
+                onClick={() => history.push('/settings')}
+                className={`
+                  relative overflow-hidden group flex items-center gap-4 px-4 py-3.5 rounded-2xl cursor-pointer transition-all duration-300
+                  ${location.pathname === '/settings'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30 translate-x-1' 
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  }
+                `}
+              >
+                <IonIcon icon={settingsOutline} className={`text-xl ${location.pathname === '/settings' ? 'text-white' : 'text-slate-400'}`} />
                 <span className="text-sm font-semibold">Pengaturan Akun</span>
                 <IonRippleEffect />
-             </div>
+              </div>
+            </IonMenuToggle>
           </div>
 
           {/* 3. Footer Actions */}

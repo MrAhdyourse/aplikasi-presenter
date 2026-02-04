@@ -32,6 +32,7 @@ import { InfoKSKPage } from './pages/InfoKSKPage';
 import { LaptopGratisPage } from './pages/LaptopGratisPage';
 import { InfoBiayaPage } from './pages/InfoBiayaPage';
 import { BrosurIklanPage } from './pages/BrosurIklanPage';
+import SettingsPage from './pages/SettingsPage';
 
 setupIonicReact();
 
@@ -127,6 +128,12 @@ const App: React.FC = () => {
           <ProtectedRoute exact path="/brosur-iklan">
              <MainLayout title="Brosur Iklan">
                <BrosurIklanPage />
+             </MainLayout>
+          </ProtectedRoute>
+
+          <ProtectedRoute exact path="/settings">
+             <MainLayout title="Pengaturan">
+               <SettingsPage />
              </MainLayout>
           </ProtectedRoute>
 
