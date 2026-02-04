@@ -1,4 +1,4 @@
-import { Client, Account, Databases } from "appwrite";
+import { Client, Account, Databases, Storage } from "appwrite";
 
 /**
  * Appwrite Client Configuration (SGP Region)
@@ -20,6 +20,9 @@ const APPWRITE_CONFIG = {
     COLLECTION_SCHEDULE_ID: "jadwalsosialisasi",
     // Collection lain bisa ditambahkan di sini
     COLLECTION_SISWA_ID: "calon_siswa", 
+    // Gallery System
+    BUCKET_ID: "6982c6110039dae90f60", // ID Storage dari Pak Ahdi
+    COLLECTION_FOLDERS_ID: "gallery_folders", // Ganti jika ID Collection beda
 };
 
 // 2. Initialize Client
@@ -30,12 +33,15 @@ const client = new Client()
 // 3. Service Initialization
 const account = new Account(client);
 const databases = new Databases(client);
+const storage = new Storage(client);
 
 // 4. Export Configuration & Services
 export const APPWRITE_IDS = {
   DATABASE_ID: APPWRITE_CONFIG.DATABASE_ID,
   COLLECTION_SCHEDULE_ID: APPWRITE_CONFIG.COLLECTION_SCHEDULE_ID,
   COLLECTION_SISWA_ID: APPWRITE_CONFIG.COLLECTION_SISWA_ID,
+  BUCKET_ID: APPWRITE_CONFIG.BUCKET_ID,
+  COLLECTION_FOLDERS_ID: APPWRITE_CONFIG.COLLECTION_FOLDERS_ID,
 };
 
-export { client, account, databases };
+export { client, account, databases, storage };

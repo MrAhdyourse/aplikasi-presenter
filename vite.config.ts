@@ -8,5 +8,9 @@ export default defineConfig({
   build: {
     target: 'es2015',
     outDir: 'dist',
+  },
+  optimizeDeps: {
+    include: ['firebase/app', 'firebase/firestore', 'firebase/storage', 'firebase/auth'],
+    exclude: ['@react-three/drei', '@react-three/fiber', 'three']
   }
 })
